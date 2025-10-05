@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import joblib
 import logging
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -24,11 +25,20 @@ except Exception as e:
 # ========== FastAPI App ==========
 app = FastAPI(title="NASA Exoplanet Predictor", version="1.0.0")
 
-# Configure CORS for frontend
+# Configure CORS for frontend. Use environment variable ALLOWED_ORIGINS to override.
+# Example: ALLOWED_ORIGINS="http://localhost:3000,https://myfrontend.app" or "*"
+allowed = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").strip()
+if allowed == "*":
+    allow_origins = ["*"]
+    allow_credentials = False
+else:
+    allow_origins = [o.strip() for o in allowed.split(",") if o.strip()]
+    allow_credentials = True
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Adjust to your frontend
-    allow_credentials=True,
+    allow_origins=allow_origins,
+    allow_credentials=allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
