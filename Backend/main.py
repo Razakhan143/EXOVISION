@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 # joblib.dump(xgb_pipeline, "xgb_pipeline.pkl")
 
 try:
-    model = joblib.load("Backend/xgb_exoplanet_pipeline.joblib")
+    model = joblib.load("xgb_exoplanet_pipeline.joblib")
     logger.info("✅ Model loaded successfully.")
 except Exception as e:
     logger.error("❌ Error loading model: %s", e)
